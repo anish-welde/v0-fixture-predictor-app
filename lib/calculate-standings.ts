@@ -57,11 +57,17 @@ export function calculateStandings(
   })
 
   // Sort by points, then goal difference, then goals for
-  return Array.from(standingsMap.values()).sort((a, b) => {
+  const sorted = Array.from(standingsMap.values()).sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points
     if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
     return b.goalsFor - a.goalsFor
   })
+
+  // Update rank to reflect new positions
+  return sorted.map((team, index) => ({
+    ...team,
+    rank: index + 1,
+  }))
 }
 
 export function calculatePositionHistory(
@@ -77,14 +83,24 @@ export function calculatePositionHistory(
 
   console.log("[v0] Starting position history calculation with", predictionCount, "predictions...")
 
-  // Initialize position history for each team (38 gameweeks)
-  const history: Record<string, number[]> = {}
-  baseStandings.forEach((team) => {
-    history[team.team] = new Array(38).fill(0)
-  })
-
   const startGW = 18
   const endGW = 38
+
+  // Initialize position history for each team with base standings positions for all gameweeks
+  const history: Record<string, number[]> = {}
+
+  // Sort base standings to get initial positions
+  const sortedBase = [...baseStandings].sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points
+    if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference
+    return b.goalsFor - a.goalsFor
+  })
+
+  // Initialize all gameweeks with the base position
+  sortedBase.forEach((team, index) => {
+    const position = index + 1
+    history[team.team] = new Array(38).fill(position)
+  })
 
   // Create a working copy of standings that we'll mutate incrementally
   const workingStandings = new Map(
@@ -119,7 +135,6 @@ export function calculatePositionHistory(
   for (let gw = startGW; gw <= endGW; gw++) {
     // Apply this gameweek's predictions to working standings
     const gwFixtures = fixturesByGameweek.get(gw) || []
-    console.log(`[v0] GW${gw} fixtures:`, gwFixtures.length)
 
     gwFixtures.forEach((fixture) => {
       const prediction = predictions[fixture.id]
