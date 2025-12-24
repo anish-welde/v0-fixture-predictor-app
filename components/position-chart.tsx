@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo } from "react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label } from "recharts"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import type { PositionHistory } from "@/lib/types"
 
 interface PositionChartProps {
@@ -123,6 +123,11 @@ export function PositionChart({ positionHistory, visibleTeams }: PositionChartPr
             labelFormatter={(label) => `${label}`}
             formatter={(value: number, name: string) => [`Position ${value}`, name]}
           />
+          <Legend
+            verticalAlign="top"
+            height={36}
+            wrapperStyle={{ paddingBottom: "20px" }}
+          />
           {visibleTeamsArray.map((team) => (
             <Line
               key={team}
@@ -132,28 +137,7 @@ export function PositionChart({ positionHistory, visibleTeams }: PositionChartPr
               strokeWidth={2}
               dot={false}
               name={team}
-              label={
-                <Label
-                  content={({ x, y, value, index }) => {
-                    // Only show label at the last data point
-                    if (index === chartData.length - 1) {
-                      return (
-                        <text
-                          x={Number(x) + 10}
-                          y={y}
-                          fill={TEAM_COLORS[team] || "#6366f1"}
-                          fontSize={11}
-                          fontWeight={600}
-                          dominantBaseline="middle"
-                        >
-                          {team}
-                        </text>
-                      )
-                    }
-                    return null
-                  }}
-                />
-              }
+              connectNulls
             />
           ))}
         </LineChart>
