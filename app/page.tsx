@@ -74,14 +74,12 @@ export default function Home() {
       return {}
     }
 
-    const predictionCount = Object.keys(predictions).length
-    console.log("[v0] Chart mode active, predictions count:", predictionCount)
-
-    if (predictionCount === 0) {
-      console.log("[v0] No predictions yet, skipping position history calculation")
+    if (baseStandings.length === 0 || fixtures.length === 0) {
       return {}
     }
 
+    const predictionCount = Object.keys(predictions).length
+    console.log("[v0] Chart mode active, predictions count:", predictionCount)
     console.log("[v0] Calculating position history for chart...")
     const start = performance.now()
     const result = calculatePositionHistory(baseStandings, fixtures, predictions)
@@ -100,12 +98,7 @@ export default function Home() {
   const handleViewModeChange = (mode: "table" | "chart") => {
     console.log("[v0] Switching view mode to:", mode)
     setViewMode(mode)
-
-    if (mode === "chart") {
-      const top6Teams = projectedStandings.slice(0, 6).map((s) => s.team)
-      console.log("[v0] Limiting to top 6 teams:", top6Teams)
-      setVisibleTeams(new Set(top6Teams))
-    }
+    // Keep all teams visible - don't limit to top 6
   }
 
   if (loading) {

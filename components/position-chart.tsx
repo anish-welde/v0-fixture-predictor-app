@@ -62,23 +62,18 @@ export function PositionChart({ positionHistory, visibleTeams }: PositionChartPr
     return (
       <div className="p-6 flex items-center justify-center h-full">
         <div className="text-center max-w-md">
-          <p className="text-muted-foreground mb-4">
-            Make some predictions first to see how they affect team positions over time.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Switch to "Table" view and start predicting match scores, then come back to see the chart.
-          </p>
+          <p className="text-muted-foreground mb-4">Loading chart data...</p>
         </div>
       </div>
     )
   }
 
-  if (visibleTeamsArray.length > 10) {
+  if (visibleTeamsArray.length > 20) {
     return (
       <div className="p-6 flex items-center justify-center h-full">
         <div className="text-center max-w-md">
           <p className="text-muted-foreground mb-4">
-            Too many teams selected ({visibleTeamsArray.length}). Please select 10 or fewer teams for optimal chart
+            Too many teams selected ({visibleTeamsArray.length}). Please select 20 or fewer teams for optimal chart
             performance.
           </p>
           <p className="text-sm text-muted-foreground">

@@ -70,11 +70,6 @@ export function calculatePositionHistory(
   predictions: Predictions,
 ): Record<string, number[]> {
   const predictionCount = Object.keys(predictions).length
-  if (predictionCount === 0) {
-    console.log("[v0] No predictions, returning empty history")
-    return {}
-  }
-
   console.log("[v0] Starting position history calculation with", predictionCount, "predictions...")
 
   // Initialize position history for each team (38 gameweeks)
